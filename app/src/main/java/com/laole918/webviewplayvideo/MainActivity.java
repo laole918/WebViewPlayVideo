@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
         mWebView = mBinding.mWebView;
         initWebView();
 //        mWebView.loadUrl("http://www.bilibili.com/video/av4332894/");
-        mWebView.loadUrl("http://www.iqiyi.com/v_19rrkzntgg.html");
+        mWebView.loadUrl("http://w.3g.yy.com/s/play/moblive.html?pid=15013x03_3084772820_1469744422_1460461821_1460461821&u=1469744422");
+//        mWebView.loadUrl("http://www.iqiyi.com/v_19rrkzntgg.html");
     }
 
     private void initWebView() {
@@ -43,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
 //        settings.setPluginsEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
 
 //        settings.setJavaScriptEnabled(true);
 		settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-//		webView.setInitialScale(100);
+//        settings.setSupportZoom(true);
+//        settings.setBuiltInZoomControls(true);
+        mWebView.setInitialScale(100);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         mWebView.setHorizontalScrollBarEnabled(false);
         mWebView.setVerticalScrollBarEnabled(false);
