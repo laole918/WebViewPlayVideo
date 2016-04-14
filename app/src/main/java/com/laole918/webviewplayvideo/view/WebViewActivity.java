@@ -20,18 +20,17 @@ import com.laole918.webviewplayvideo.R;
 import com.laole918.webviewplayvideo.databinding.ActivityWebViewBinding;
 import com.laole918.webviewplayvideo.mode.Setting;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Logger;
 
 public class WebViewActivity extends AppCompatActivity {
 
     private FrameLayout mFrameLayout;
     private WebView mWebView;
     private InsideWebChromeClient mInsideWebChromeClient;
+    private JavascriptInterface javascriptInterface;
+    private String javascript;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,10 @@ public class WebViewActivity extends AppCompatActivity {
         mFrameLayout = mBinding.mFrameLayout;
         mWebView = mBinding.mWebView;
         initWebView();
+        loadJS();
         mWebView.loadUrl(setting.getWebSite().getUrl());
+//        mWebView.loadUrl("file:///android_asset/test.html");
+//        mWebView.loadUrl("http://w.3g.yy.com/s/play/live.html?sid=54880976&ssid=54880976&u=92843397");
     }
 
     private void initWebView() {
@@ -61,9 +63,27 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         mInsideWebChromeClient = new InsideWebChromeClient();
         InsideWebViewClient mInsideWebViewClient = new InsideWebViewClient();
-        mWebView.addJavascriptInterface(new JavascriptInterface(), "java2js");
+        javascriptInterface = new JavascriptInterface();
+        mWebView.addJavascriptInterface(javascriptInterface, "java2js_laole918");
         mWebView.setWebChromeClient(mInsideWebChromeClient);
         mWebView.setWebViewClient(mInsideWebViewClient);
+    }
+
+    private void loadJS() {
+        try {
+            InputStream is = getAssets().open("video.js");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String buff;
+            while ((buff = reader.readLine()) != null) {
+                sb.append(buff);
+            }
+            sb.insert(0, "javascript:");
+            javascript = sb.toString();
+            Log.d("JS:", javascript);
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 
     @Override
@@ -143,6 +163,19 @@ public class WebViewActivity extends AppCompatActivity {
             super.onHideCustomView();
         }
 
+//        @Override
+//        public void onReceivedTitle(WebView view, String url) {
+//            super.onReceivedTitle(view, url);
+//            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
+//        }
+//
+//        @Override
+//        public void onProgressChanged(WebView view, int newProgress) {
+//            super.onProgressChanged(view, newProgress);
+//            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
+//        }
     }
 
     private class InsideWebViewClient extends WebViewClient {
@@ -154,22 +187,31 @@ public class WebViewActivity extends AppCompatActivity {
             return true;
         }
 
+//        public void onLoadResource(WebView view, String url) {
+//            super.onLoadResource(view, url);
+//            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
+//        }
+//
+//        @Override
+//        public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+//            super.doUpdateVisitedHistory(view, url, isReload);
+//            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
+//        }
+//
+//        @Override
+//        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//            super.onPageStarted(view, url, favicon);
+//            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
+//        }
+
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            try {
-                FileInputStream fis = getBaseContext().openFileInput("video.js");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-                StringBuilder sb = new StringBuilder();
-                String buff;
-                while ((buff = reader.readLine()) != null) {
-                    sb.append(buff);
-                }
-                sb.insert(0, "javascript:");
-                mWebView.loadUrl(sb.toString());
-            } catch (Exception ignored) {
-
-            }
+            mWebView.loadUrl(javascript);
+//            mWebView.addJavascriptInterface(javascriptInterface, "java2js");
         }
 
     }
