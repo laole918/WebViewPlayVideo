@@ -6,9 +6,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -40,6 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
         if (setting == null) {
             return;
         }
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         ActivityWebViewBinding mBinding = DataBindingUtil.setContentView(this, R.layout.activity_web_view);
         mFrameLayout = mBinding.mFrameLayout;
         mWebView = mBinding.mWebView;
@@ -251,6 +254,22 @@ public class WebViewActivity extends AppCompatActivity {
                     if (mInsideWebChromeClient != null) {
                         mInsideWebChromeClient.onHideCustomView();
                     }
+                }
+            });
+        }
+
+        @android.webkit.JavascriptInterface
+        public void supportFullScreen(String method) {
+            Log.d(TAG, "supportFullScreen:" + method);
+        }
+
+        @android.webkit.JavascriptInterface
+        public void notSupportFullScreen() {
+            Log.d(TAG, "notSupportFullScreen");
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(WebViewActivity.this).setMessage(getString(R.string.not_support_full_screen)).show();
                 }
             });
         }

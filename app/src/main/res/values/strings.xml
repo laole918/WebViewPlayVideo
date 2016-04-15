@@ -4,6 +4,7 @@
     <string name="btn_open_web">打开Web视频</string>
     <string name="no">否</string>
     <string name="yes">是</string>
+    <string name="not_support_full_screen">不支持全屏播放！</string>
 
 
     <string-array name="website">
